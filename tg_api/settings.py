@@ -96,18 +96,17 @@ WSGI_APPLICATION = 'tg_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='postgres://default:Xp0sa6FIYlKx@ep-withered-surf-34962409.us-east-1.postgres.vercel-storage.com:5432/verceldb'
+    )
 }
-if not DEBUG:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default='postgres://default:Xp0sa6FIYlKx@ep-withered-surf-34962409.us-east-1.postgres.vercel-storage.com:5432/verceldb'
-        )
-    }
 
 
 # Password validation
