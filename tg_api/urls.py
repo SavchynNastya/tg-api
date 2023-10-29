@@ -1,6 +1,8 @@
 
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.conf.urls.static import static
+from django.conf import settings
 from users import views as users_views
 from chats import views as chats_views
 from user_settings import views as settings_views
@@ -50,3 +52,6 @@ urlpatterns = [
         ])),
     ], 'api'))),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
