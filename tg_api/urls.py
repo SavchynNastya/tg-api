@@ -8,7 +8,7 @@ from chats import views as chats_views
 from user_settings import views as settings_views
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('api/', include(([
         path('auth/', include([
             path('login/', users_views.UserLoginView.as_view(), name='login'),
