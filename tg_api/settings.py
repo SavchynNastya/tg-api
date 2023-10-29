@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u9tqm1)m&4ql1dz))wopukw1x@x7xs1z^law33ubgs9ie2z07j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 
@@ -101,6 +102,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+if not DEBUG:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default='postgres://default:Xp0sa6FIYlKx@ep-withered-surf-34962409.us-east-1.postgres.vercel-storage.com:5432/verceldb'
+        )
+    }
 
 
 # Password validation

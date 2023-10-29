@@ -7,3 +7,4 @@ pyotp==2.9.0
 Pillow==10.1.0
 django_otp==1.2.4
 django-cors-headers==4.3.0
+dj_database_url==2.1.0
