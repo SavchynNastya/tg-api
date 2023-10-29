@@ -8,4 +8,4 @@ Pillow==10.1.0
 django_otp==1.2.4
 django-cors-headers==4.3.0
 dj_database_url==2.1.0
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
