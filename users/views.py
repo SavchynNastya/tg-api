@@ -7,6 +7,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from .serializers import *
 from django.contrib.auth import get_user_model
 from rest_framework import generics, status
+from django.db import IntegrityError
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
@@ -74,8 +75,13 @@ def update_username_and_status(request):
             user.username = username
         if user_status:
             user.status = user_status
-        user.save()
-        return Response('OK', status=status.HTTP_200_OK)
+        try:
+            user.save()
+            user.refresh_from_db()
+        except IntegrityError:
+            return Response({'error': 'User with such username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = UserSerializer(user, context={'self': True, 'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
@@ -125,11 +131,14 @@ def get_users(request):
 @permission_classes([IsAuthenticated])
 def update_profile_pic(request):
     try:
-        serializer = ProfilePictureUpdateSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+        image = request.data.get('image')
+        if image:
+            request.user.profile_pic = image
+            request.user.save()
+            serializer = UserSerializer(request.user, context={'self': True, 'request': request})
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': 'No image provided'}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
