@@ -7,15 +7,9 @@ from users.serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from users.models import UserSettings, CustomUser as User, Message, Chat, ChatUser, Folder
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
-from users.utils import check_blocked
+from users.models import CustomUser as User, Message, Chat, ChatUser, Folder
+import random
 
-
-"""
-CHATS
-"""
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -28,7 +22,12 @@ def list_chats(request):
 @permission_classes([IsAuthenticated])
 def create_chat(request):
     user_ids = request.data['user_ids']
-    chat = Chat.objects.create_chat(creator=request.user, name=None, user_ids=user_ids)
+    if len(user_ids) == 1:
+        user_id = user_ids[0]
+        user = get_object_or_404(User, pk=user_id)
+        chat = Chat.objects.create_chat(creator=request.user, name=user.username, user_ids=user_ids)
+    else:
+        chat = Chat.objects.create_chat(creator=request.user, name=f"chat-".join(random.choice('0987654321') for _ in range(3)), user_ids=user_ids)
     serializer = ChatSerializer(chat, context={'request': request})
     return Response(serializer.data, status=status.HTTP_200_OK)
 
