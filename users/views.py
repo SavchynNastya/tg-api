@@ -91,6 +91,36 @@ def get_user(request, id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users(request):
+    query = request.query_params.get('query', None)
+    page = int(request.query_params.get('page', 1))
+    page_size = 8
+
+    users = User.objects.all()
+    if query:
+        users = users.filter(username__icontains=query)
+    total_objects = users.count()
+
+    end = page * page_size
+    items = list(users[:end])
+    serializer = UserSerializer(items, many=True, context={'self': False, 'request': request})
+    response_data = {
+        'total_objects': total_objects,
+        'objects_per_page': page_size,
+        'current_page': page,
+        'results': serializer.data,
+    }
+    if page > 1:
+        response_data['previous_page'] = page - 1
+
+    if end < total_objects:
+        response_data['next_page'] = page + 1
+
+    return Response(response_data)
+
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_profile_pic(request):

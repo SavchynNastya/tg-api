@@ -17,6 +17,7 @@ urlpatterns = [
             path('generate_otp/', users_views.generate_otp, name='generate_otp'),
         ])),
         path('users/', include([
+            path('', users_views.get_users, name='users_list'),
             path('update-username-status/', users_views.update_username_and_status, name='update_username_and_status'),
             path('profile-pic/', users_views.update_profile_pic, name='update_profile_pic'),
             re_path(r'^(?P<id>[0-9]+|[a-zA-Z]+)/$', users_views.get_user, name='user_obj'),
