@@ -101,8 +101,8 @@ def get_user(request, id):
 @permission_classes([IsAuthenticated])
 def get_users(request):
     query = request.query_params.get('query', None)
+    page_size = int(request.query_params.get('page_size', 8))
     page = int(request.query_params.get('page', 1))
-    page_size = 8
 
     users = User.objects.all()
     if query:
