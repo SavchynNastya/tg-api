@@ -182,14 +182,14 @@ def rename_folder(request, id):
 def get_folder_chats(request, id):
     folder_chats = Folder.objects.get_chats_in_folder(folder_id=id)
     serializer = ShortChatSerializer(folder_chats, many=True, context={'request': request})
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def folder_list(request):
     folder_chats = Folder.objects.folder_list(owner=request.user)
     serializer = FolderSerializer(folder_chats, many=True, context={'request': request})
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

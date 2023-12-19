@@ -113,5 +113,6 @@ class ProfilePictureUpdateSerializer(serializers.Serializer):
 
     def update(self, obj, validated_data):
         obj.profile_pic = validated_data.get('image', obj.profile_pic)
+        print(validated_data.get('image'))
         obj.save()
         return obj
